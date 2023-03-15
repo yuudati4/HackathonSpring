@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+</head>
+
+<body>
+
+    <!-- 新規登録 -->
+    <form action="http://localhost/login.php" method="POST" onsubmit="hashCredentials()">
+        <p>新規登録</p>
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username">
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password">
+        <br>
+        <input type="submit" value="登録">
+    </form>
+
+    <!-- ログイン設定 -->
+    <form action="http://localhost/identify.php" method="POST" onsubmit="hashCredentials()">
+        <p>ログイン</p>
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username">
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password">
+        <br>
+        <input type="submit" value="ログイン">
+    </form>
+</body>
+
+</html>
+
+<script>
+    function hashCredentials() { //ハッシュ化
+        var usernameInput = document.getElementById('username'); 
+        var passwordInput = document.getElementById('password');
+        var hashedUsername = sha256(usernameInput.value); 
+        var hashedPassword = sha256(passwordInput.value);
+        usernameInput.value = hashedUsername;
+        passwordInput.value = hashedPassword;
+    }
+</script>
