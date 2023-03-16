@@ -1,0 +1,129 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>タブタイトル</title>
+    <style>
+        .parent {
+            display: flex;
+        }
+
+        .child {
+            color: black;
+            border: double;
+            border-radius: 10px;
+            border-color: gray;
+            text-align: center;
+            width: 300px;
+            height: 200px;
+            background-color: bisque;
+            position: relative;
+            margin: 100px auto;
+            padding: auto;
+            font-size: large;
+        }
+    </style>
+</head>
+
+<body style="background-color: gray;">
+    <section>
+        <div id="upper-bar"
+            style="background-color: blanchedalmond; padding: 10px 10px; border-radius: 10px; border-style:solid; border-color: red;">
+            <button id="button" aria-pressed="false" style="font-size: 20px; border-radius: 5px;">
+                三
+            </button>
+            <a href="/">タイトル</a>
+            <a href="/account_part.html">
+                <img class="account" src="account.png"
+                    style="width: 40px; height: 40px; display: block; float:right; position: relative;">
+            </a>
+            <a href="/">
+                <img class="bell-mark" src="bell.png"
+                    style="width: 30px; height: 30px; display: block; float:right; position: relative; margin-right: 5px; margin-top: 5px;">
+            </a>
+            <a href="/upload.html">
+                <img class="upload" src="upload.png"
+                    style="width: 45px; height: 45px; display: block; float:right; position: relative; margin-right: 6px;">
+            </a>
+        </div>
+    </section>
+    <label>再生位置(秒):
+        <input type="range" name="samplerange" value="50" min="0" max="100" step="1"
+            oninput="document.getElementById('output1').value=this.value; SeekTo(this.value)">
+    </label>
+    <input type="button" id="btn" value="再生" onclick="PlayVideo();" />
+    <input type="button" id="btn" value="停止" onclick="PauseVideo();" />
+    <output id="output1">50</output>
+    <div id="ytPlayerBlock" class="ytPlayerBlock">
+    </div>
+
+    <script>
+        script = document.createElement('script');
+        script.src = "//www.youtube.com/iframe_api";
+        firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+
+        var players = [];
+
+        var ids = [];
+
+        var paracnt = 0;
+
+        // 動画呼び出し
+        function onYouTubeIframeAPIReady() {
+
+            const url = new URL(window.location.href);
+
+            const params = url.searchParams;
+
+            console.log(params);
+
+            for(let value of params.values()){
+                paracnt++;
+            }
+            
+            for (var i = 0; i < paracnt; i++) {
+                var ytplayer = document.createElement("div");
+                ytplayer.id = "player" + i;
+                ytplayer.class = "ytplater";
+                document.getElementById("ytPlayerBlock").after(ytplayer);
+
+                ids["id"+i] = params.get("id"+i);
+
+                players['player'+i] = new YT.Player('player'+i, {
+                height: '285',
+                width: '480',
+                videoId: ids["id"+i],
+                events: {
+                    'onReady': onPlayerReady,
+                }
+            });
+            }
+        }
+
+        function PlayVideo() {
+            console.log(paracnt);
+            for(var i = 0; i < paracnt; i++){
+                players['player'+i].playVideo();
+            }
+        }
+
+        function PauseVideo() {
+            for(var i = 0; i < paracnt; i++){
+                players['player'+i].pauseVideo();
+            }
+        }
+
+        function SeekTo(sec) {
+            for(var i = 0; i < paracnt; i++){
+                players['player'+i].seekTo(sec, true);
+            }
+        }
+
+        function onPlayerReady() {
+            for(var i = 0; i < paracnt; i++){
+                players['player'+i].playVideo();
+            }
+        }
+    </script>
+</body>
