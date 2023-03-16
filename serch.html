@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>タブタイトル</title>
+        <style>
+            .parent {
+                display: flex;
+            }
+
+            .child {
+                color: black;
+                border: double;
+                border-radius: 10px;
+                border-color: gray;
+                text-align: center;
+                width: 450px;
+                height: 300px;
+                background-color: bisque;
+                position: relative;
+                margin: 100px auto auto 0px;
+                padding: auto;
+                font-size: large;
+                display: inline-block;
+            }
+        </style>
+        <script>
+            //IFrame Player API の読み込み
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+            var ytPlayer = [];
+            var ytData = [
+                {
+                    id: 'ZRCdORJiUgU', //youtubeのID
+                    area: '1', //youtubeを表示する場所
+                },
+                {
+                    id: '6aFdEhEZQjE',
+                    area: '2',
+                },
+                {
+                    id: 'd-3cEQ1d1E4',
+                    area: '3',
+                },
+                {
+                    id: 'sGNkT6XyQRc',
+                    area: '4',
+                }
+            ];
+    
+            //YouTubeの埋め込み
+            function onYouTubeIframeAPIReady() {
+                for (var i = 0; i < ytData.length; i++) {
+                    ytPlayer[i] = new YT.Player(ytData[i]['area'], {
+                        width: 350,
+                        height: 200,
+                        videoId: ytData[i]['id'],
+                        playerVars: {
+                            rel: 0, //再生動画と同じチャンネルから関連動画を選択
+                            modestbranding: 1 //YouTubeロゴを表示しない
+                        }
+                    });
+                }
+            }
+        </script>
+    </head>
+    <body style="background-color: gray;">
+        <section>
+            <div id="upper-bar" style="background-color: blanchedalmond; padding: 10px 10px; border-radius: 10px; border-style:solid; border-color: red;">
+                <button id="button" aria-pressed="false" style="font-size: 20px; border-radius: 5px;">
+                    三
+                </button>
+                <a href="/">タイトル</a>
+                <a href="/account_part.html">
+                    <img class="account" src="account.png" style="width: 40px; height: 40px; display: block; float:right; position: relative;">
+                </a>
+                <a href="/">
+                    <img class="bell-mark" src="bell.png" style="width: 30px; height: 30px; display: block; float:right; position: relative; margin-right: 5px; margin-top: 5px;">
+                </a>
+                <a href="/upload.html">
+                    <img class="upload" src="upload.png" style="width: 45px; height: 45px; display: block; float:right; position: relative; margin-right: 6px;">
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <div id="serch-bar">
+                <form id="serchform" align="center" style="position: relative; top: 50px">
+                    <input type="serch" name="serch" id="serch" placeholder="検索" style="padding: 10px; width: 250px; font-size: 1.1em; height: 10px; border-radius: 5px; border: double;">
+                    <button id="serch-button" style="font-size: 20px; padding: 2px; border-radius: 5px;">
+                        serch
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section>
+            <div style="display: inline;">
+                <div class="child">
+                    <p>
+                        <div id="1" style="position: relative; display: block; margin: 0px auto;"></div>
+                        <div style="display: flex;">
+                            <img class="follow_account" src="account.png" style="width: 50px; height: 50px; margin-left: 50px;">
+                            <div style="font-size: 16px;">
+                                <p>山田太郎</p>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                <div class="child">
+                    <p>
+                        <div id="2" style="position: relative; display: block; margin: 0px auto;"></div>
+                        <div style="display: flex;">
+                            <img class="follow_account" src="account.png" style="width: 50px; height: 50px; margin-left: 50px;">
+                            <div style="font-size: 16px;">
+                                <p>山田太郎</p>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                <div class="child">
+                    <p>
+                        <div id="3" style="position: relative; display: block; margin: 0px auto;"></div>
+                        <div style="display: flex;">
+                            <img class="follow_account" src="account.png" style="width: 50px; height: 50px; margin-left: 50px;">
+                            <div style="font-size: 16px;">
+                                <p>山田太郎</p>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                <div class="child">
+                    <p>
+                        <div id="4" style="position: relative; display: block; margin: 0px auto;"></div>
+                        <div style="display: flex;">
+                            <img class="follow_account" src="account.png" style="width: 50px; height: 50px; margin-left: 50px;">
+                            <div style="font-size: 16px;">
+                                <p>山田太郎</p>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
