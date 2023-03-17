@@ -31,30 +31,66 @@
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var ytPlayer = [];
+        var keyword = "";
+        var dataCnt;
         var ytData = [
             {
-                id: 'ZRCdORJiUgU', //youtubeのID
-                area: '1', //youtubeを表示する場所
-            },
-            {
-                id: '6aFdEhEZQjE',
-                area: '2',
-            },
-            {
-                id: 'd-3cEQ1d1E4',
-                area: '3',
-            },
-            {
-                id: 'sGNkT6XyQRc',
-                area: '4',
+                id: '', //youtubeのID
+                area: '', //youtubeを表示する場所
+                part: '',
+                tempo: '',
+                user: ''
             }
         ];
 
-        //YouTubeの埋め込み
-        function onYouTubeIframeAPIReady() {
-            for (var i = 0; i < ytData.length; i++) {
+        var ytPlayer = [];
+        var instObjs = [];
+
+        function reqListener2() {
+            var responseParmArray = this.responseText.split(",");
+            console.log(this.responseText);
+            dataCnt = responseParmArray.length / 3;
+            var root = document.createElement('rootObj');
+            for (var i = 0; i < dataCnt - 1; i++) {
+                // ytData[i]['id'] = responseParmArray[i * 5];
+                // ytData[i]['area'] = i + 1;
+                // ytData[i]['part'] = responseParmArray[(i * 5) + 1];
+                // ytData[i]['tempo'] = responseParmArray[(i * 5) + 2];
+                // ytData[i]['user'] = responseParmArray[(i * 5) + 3];
+                var new_data = {
+                    id: responseParmArray[i * 4], //youtubeのID
+                    area: String(i + 1), //youtubeを表示する場所
+                    part: responseParmArray[(i * 4) + 1],
+                    tempo: responseParmArray[(i * 4) + 2],
+                    user: responseParmArray[(i * 4) + 3]
+                };
+                ytData.push(new_data);
+            }
+            console.log(ytData);
+            // areas = [];
+            // users = [];
+            // tempos = [];
+            // buttons = [];
+            for (var i = 1; i < ytData.length; i++) {
+                var resource = document.getElementById("template");
+                var instObj = resource.content.cloneNode(true);
+                instObjs.push(instObj);
+                instObj.querySelector(".area").id = String(i);
+                instObj.querySelector(".user").innerHTML = ytData[i]['user'];
+                instObj.querySelector(".tempo").innerHTML = ytData[i]['tempo'];
+                instObj.querySelector(".selectButton").value = ytData[i]['id'];
+                instObj.querySelector(".part").innerHTML = ytData[i]['part'];
+
+                document.getElementById("root").appendChild(instObj);
+                // document.getElementById("tempArea").id = String(i);
+                // document.getElementById("user").innerHTML = ytData[i]['user'];
+                // document.getElementById("tempo").innerHTML = ytData[i]['tempo'];
+                // document.getElementById("selectButton").value = ytData[i]['id'];
+                // resource.parentElement.after(instObj);
+
+                // root.after(instObj);
+                // console.log(ytData[i]['id']);
+
                 ytPlayer[i] = new YT.Player(ytData[i]['area'], {
                     width: 350,
                     height: 200,
@@ -65,6 +101,52 @@
                     }
                 });
             }
+
+            // var elem = document.createElement('div');
+            // elem.innerHTML = this.responseText;
+            // my_div = document.getElementById("org_div1");
+            // document.body.insertBefore(elem, my_div);
+            // console.log(this.responseText)
+        }
+        function search() {
+            // for (var i = 0; i < ytPlayer.length; i++) {
+            //     document.getElementById(String(i + 1)).remove();
+            // }
+            document.getElementById("root").innerHTML = '';
+
+            ytData = [
+                {
+                    id: '', //youtubeのID
+                    area: '', //youtubeを表示する場所
+                    part: '',
+                    tempo: '',
+                    user: ''
+                }
+            ];
+            ytPlayer = [];
+
+            
+
+            var search = document.getElementById("serch").value;
+            //var keyword = "";
+            var url = "keyword.php?search=" + search;
+            // var url = "test.php";
+            const request = new XMLHttpRequest();
+            request.addEventListener("load", reqListener2);
+            request.open("GET", url, true);
+            request.send("");
+        }
+
+        function reqListener() {
+            var elem = document.createElement('div');
+            elem.innerHTML = this.responseText;
+            my_div = document.getElementById("org_div1");
+            document.body.insertBefore(elem, my_div);
+            console.log(this.responseText)
+        }
+
+        //YouTubeの埋め込み
+        function onYouTubeIframeAPIReady() {
         }
 
         var selectedCnt = 0;
@@ -87,16 +169,16 @@
             <button id="button" aria-pressed="false" style="font-size: 20px; border-radius: 5px;">
                 三
             </button>
-            <a href="/">タイトル</a>
+            <a href="/home.php">Bander</a>
             <a href="/account_part.html">
                 <img class="account" src="account.png"
                     style="width: 40px; height: 40px; display: block; float:right; position: relative;">
             </a>
-            <a href="/">
-                <img class="bell-mark" src="bell.png"
+            <a href="/serch.html">
+                <img  src="bell.png"
                     style="width: 30px; height: 30px; display: block; float:right; position: relative; margin-right: 5px; margin-top: 5px;">
             </a>
-            <a href="/upload.html">
+            <a href="/upload.php">
                 <img class="upload" src="upload.png"
                     style="width: 45px; height: 45px; display: block; float:right; position: relative; margin-right: 6px;">
             </a>
@@ -108,89 +190,47 @@
             <form id="serchform" align="center" style="position: relative; top: 50px">
                 <input type="serch" name="serch" id="serch" placeholder="検索"
                     style="padding: 10px; width: 250px; font-size: 1.1em; height: 10px; border-radius: 5px; border: double;">
-                <button id="serch-button" style="font-size: 20px; padding: 2px; border-radius: 5px;">
-                    serch
-                </button>
             </form>
+            <button id="serch-button" onclick="search()" style="font-size: 20px; padding: 2px; border-radius: 5px;">
+                serch
+            </button>
         </div>
     </section>
 
     <section>
         <form id="get" method="get" action="multi.html">
-            <button id="submit" type="submit" style="margin: 50px 0px 0px 0px; width: 150px; height: 50px; font-size: 20px; border-radius: 5px;">
+            <button id="submit" type="submit"
+                style="margin: 50px 0px 0px 0px; width: 150px; height: 50px; font-size: 20px; border-radius: 5px;">
                 演奏する
             </button>
         </form>
     </section>
 
-    <section>
-        <div style="display: inline;">
-            <div class="child">
-                <p>
-                <div id="1" style="position: relative; display: block; margin: 0px auto;"></div>
-                <div style="display: flex;">
-                    <img class="follow_account" src="account.png" style="width: 50px; height: 50px; margin-left: 50px;">
-                    <div style="font-size: 16px;">
-                        <p>山田太郎</p>
-                        <p>テンポ:</p>
-                    </div>
-                    <button onclick="addID(this.value)" value="ZRCdORJiUgU"
-                        style="display: inline; margin: 20px auto 0px auto; width: 150px; height: 40px; font-size: 16px;">
-                        演奏に追加する
-                    </button>
-                </div>
-                </p>
-            </div>
-            <div class="child">
-                <p>
-                <div id="2" style="position: relative; display: block; margin: 0px auto;"></div>
-                <div style="display: flex;">
-                    <img class="follow_account" src="account.png" style="width: 50px; height: 50px; margin-left: 50px;">
-                    <div style="font-size: 16px;">
-                        <p>山田太郎</p>
-                        <p>テンポ:</p>
-                    </div>
-                    <button onclick="addID(this.value)" value="6aFdEhEZQjE"
-                        style="display: inline; margin: 20px auto 0px auto; width: 150px; height: 40px; font-size: 16px;">
-                        演奏に追加する
-                    </button>
-                </div>
-                </p>
-            </div>
-            <div class="child">
-                <p>
-                <div id="3" style="position: relative; display: block; margin: 0px auto;"></div>
-                <div style="display: flex;">
-                    <img class="follow_account" src="account.png" style="width: 50px; height: 50px; margin-left: 50px;">
-                    <div style="font-size: 16px;">
-                        <p>山田太郎</p>
-                        <p>テンポ:</p>
-                    </div>
-                    <button onclick="addID(this.value)" value="d-3cEQ1d1E4"
-                        style="display: inline; margin: 20px auto 0px auto; width: 150px; height: 40px; font-size: 16px;">
-                        演奏に追加する
-                    </button>
-                </div>
-                </p>
-            </div>
-            <div class="child">
-                <p>
-                <div id="4" style="position: relative; display: block; margin: 0px auto;"></div>
-                <div style="display: flex;">
-                    <img class="follow_account" src="account.png" style="width: 50px; height: 50px; margin-left: 50px;">
-                    <div style="font-size: 16px;">
-                        <p>山田太郎</p>
-                        <p>テンポ:</p>
-                    </div>
-                    <button onclick="addID(this.value)" value="sGNkT6XyQRc"
-                        style="display: inline; margin: 20px auto 0px auto; width: 150px; height: 40px; font-size: 16px;">
-                        演奏に追加する
-                    </button>
-                </div>
-                </p>
-            </div>
+    <section id="rootObj">
+        <div id = "root" style="display: inline;">
         </div>
     </section>
+    <template id="template">
+        <div id="tempDiv" class="child">
+            <p>
+            <div class="area" id="area" style="position: relative; display: block; margin: 0px auto;"></div>
+            <div style="display: flex;">
+                <img class="follow_account" src="account.png"
+                    style="width: 50px; height: 50px; margin-left: 50px;">
+                <div style="font-size: 10px;">
+                    <p id="user" class="user">山田太郎</p>
+                    <p id="tempo" class="tempo">テンポ:</p>
+                    <p id="part" class="part">パート:</p>
+                </div>
+                <button class="selectButton" id="selectButton" onclick="addID(this.value)" value=""
+                    style="display: inline; margin: 20px auto 0px auto; width: 150px; height: 40px; font-size: 16px;">
+                    演奏に追加する
+                </button>
+            </div>
+            </p>
+        </div>
+    </template>
 </body>
 
 </html>
+

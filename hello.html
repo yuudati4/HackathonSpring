@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <button onclick="playVideos()">Play Videos</button>
+  <script>
+    var video1Url = "https://www.youtube.com/embed/Ej5Kjqe408o";
+    var video2Url = "https://www.youtube.com/embed/Ej5Kjqe408o";
+    
+    function playVideos() {
+      var video1 = document.createElement("iframe");
+      video1.setAttribute("width", "560");
+      video1.setAttribute("height", "315");
+      video1.setAttribute("src", video1Url);
+      video1.setAttribute("frameborder", "0");
+      video1.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+      video1.setAttribute("allowfullscreen", "");
+
+      var video2 = document.createElement("iframe");
+      video2.setAttribute("width", "560");
+      video2.setAttribute("height", "315");
+      video2.setAttribute("src", video2Url);
+      video2.setAttribute("frameborder", "0");
+      video2.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+      video2.setAttribute("allowfullscreen", "");
+
+      var container = document.createElement("div");
+      container.appendChild(video1);
+      container.appendChild(video2);
+
+      document.body.appendChild(container);
+
+      video1.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+      video2.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    }
+  </script>
+</body>
+
+</html>

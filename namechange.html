@@ -4,25 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="login&register.css" type="text/css">
-    <style>
-        body {
-            background-color: gray;
-        }
-    </style>
 </head>
 
 <body>
-    <form method="post" action="login.php" onsubmit="return checkForm();">
-        <h1>ログイン</h1>
-        <input type="text" placeholder="Username" id="username" name="username">
+    <!-- <form action="update_user.php" method="POST">
+        <label for="new_username">New Username:</label>
+        <input type="text" id="new_username" name="new_username" required>
+
+        <label for="password">Current Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <input type="submit" value="Update Username">
+    </form> -->
+    <form method="post" action="namechange.php" onsubmit="return checkForm();">
+        <h1>ユーザー名変更 <i class="material-icons help-icon" id="question-icon">help_outline</i></h1>
+        <input type="text" placeholder="New_username" id="username" name="new_username">
         <input type="password" placeholder="Password" id="password" name="password">
         <input type="hidden" id="hash_username" name="hash_username">
         <input type="hidden" id="hash_password" name="hash_password">
-        <button type="submit" onclick="hashFields()">Login</button>
+        <button type="submit" onclick="hashFields()">change</button>
     </form>
 </body>
 
 </html>
+
 
 <script>
     function checkForm() {
@@ -44,6 +49,7 @@
             alert("ユーザー名は半角英数字のみしか使用できません。");
             return false;
         }
+        return true;
         // パスワードに日本語が含まれている場合
         if (/[\u3000-\u30FF]/.test(password)) {
             alert("パスワードは半角英数字のみしか使用できません。");
@@ -51,7 +57,6 @@
         }
         return true;
     }
-
     async function hashFields() {
         const encoder = new TextEncoder();
         const username = document.getElementById("username").value;

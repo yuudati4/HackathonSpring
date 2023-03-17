@@ -11,27 +11,33 @@ if (mysqli_connect_errno()) {
     exit();
 }
  
-// $username = hash_hmac('sha512', $_GET['username'] , 'secret', false);
-// $passward = hash_hmac('sha512', $_GET['passward'] , 'secret', false);
 $username = $_POST['username'];
 $password = $_POST['password'];
 $hashedUsername = hash('sha256', $username);
 $hashedPassword = hash('sha256', $password);
 
-// データを認証する
-$sql = "SELECT * FROM `User` WHERE `username` LIKE '" .$hashedUsername. "' AND `password` LIKE '" .$hashedPassword. "'";//クエリ
+
+// データを挿入する
+$sql = "INSERT INTO `User` (`username`, `password`) VALUES ('" .$username. "', '" .$hashedPassword. "');";//クエリ
  
 $result = $mysqli->query($sql);
-//echo $result -> num_rows;
  
-if (!$result -> num_rows) {
-    echo '認証に失敗しました。'.mysqli_error();
+if (!$result) {
+    echo '登録に失敗しました。'.mysqli_error();
 }else{
-    echo '認証に成功しました';
-    header("location: index.html");
+    echo '登録に成功しました';
+    echo $username;
+}
+
+if(isset($_POST['back'])) {
+    header("location: defult.php");
 }
  
 // 切断
 $mysqli->close();
  
 ?>
+
+<form action="register.php" method="post">
+    <input type="submit" name="back" value="最初に戻る" />
+</form>

@@ -4,7 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="login&register.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
+        .help-icon {
+            font-size: 1.0em;
+            color: red;
+            /* vertical-align: middle; */
+            margin-left: 5px;
+            position: absolute;
+            top: 113px;
+        }
         body {
             background-color: gray;
         }
@@ -12,19 +21,22 @@
 </head>
 
 <body>
-    <form method="post" action="login.php" onsubmit="return checkForm();">
-        <h1>ログイン</h1>
+
+    <form method="post" action="register.php" onsubmit="return checkForm();">
+        <h1>登録 <i class="material-icons help-icon" id="question-icon">help_outline</i></h1>
         <input type="text" placeholder="Username" id="username" name="username">
         <input type="password" placeholder="Password" id="password" name="password">
         <input type="hidden" id="hash_username" name="hash_username">
         <input type="hidden" id="hash_password" name="hash_password">
-        <button type="submit" onclick="hashFields()">Login</button>
+        <button type="submit" onclick="hashFields()">Register</button>
     </form>
+
 </body>
 
 </html>
 
 <script>
+
     function checkForm() {
         var username = document.getElementById('username').value;
         var password = document.getElementById('password').value;
@@ -44,6 +56,7 @@
             alert("ユーザー名は半角英数字のみしか使用できません。");
             return false;
         }
+        return true;
         // パスワードに日本語が含まれている場合
         if (/[\u3000-\u30FF]/.test(password)) {
             alert("パスワードは半角英数字のみしか使用できません。");
@@ -67,4 +80,22 @@
         document.getElementById("hash_username").value = usernameHashHex;
         document.getElementById("hash_password").value = passwordHashHex;
     }
+
+    const questionIcon = document.getElementById('question-icon');
+    const tooltipText = 'ユーザー名、パスワード共に15文字以内かつ半角英数字のみでお願いします。';
+
+    questionIcon.addEventListener('mouseover', function () {
+        // マウスオーバー時の処理
+        const tooltip = document.createElement('div');
+        tooltip.classList.add('tooltip');
+        tooltip.textContent = tooltipText;
+        document.body.appendChild(tooltip);
+    });
+
+    questionIcon.addEventListener('mouseout', function () {
+        // マウスアウト時の処理
+        const tooltip = document.querySelector('.tooltip');
+        document.body.removeChild(tooltip);
+    });
+
 </script>
